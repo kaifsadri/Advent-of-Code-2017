@@ -4,34 +4,23 @@ L = [line.strip().split() for line in open("08.txt").readlines()]
 R = defaultdict(int)
 
 
-def condition(reg, cond, value):
-    global R
-    r = R[reg]
-    v = int(value)
-    if cond == "!=":
-        return r != v
-    elif cond == ">=":
-        return r >= v
-    elif cond == ">":
-        return r > v
-    elif cond == "<":
-        return r < v
-    elif cond == "<=":
-        return r <= v
-    elif cond == "==":
-        return r == v
-
-
 M = 0
-for line in L:
-    r = line[0]
-    val = int(line[2])
-    if line[1] == "inc":
-        if condition(line[4], line[5], line[6]):
-            R[r] += val
-    elif line[1] == "dec":
-        if condition(line[4], line[5], line[6]):
-            R[r] -= val
+for l in L:
+    e = (
+        "R['"
+        + l[0]
+        + "']"
+        + l[1].replace("inc", "+=").replace("dec", "-=")
+        + l[2]
+        + " if "
+        + "R['"
+        + l[4]
+        + "']"
+        + l[5]
+        + l[6]
+        + " else 0"
+    )
+    exec(e)
     if (m := max(R.values())) > M:
         M = m
 
